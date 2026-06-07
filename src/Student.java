@@ -30,7 +30,6 @@ public abstract class Student extends Person
         this.enrollmentYear = enrollmentYear;
         this.grades = new ArrayList<>();
         this.gpa = 0.0;
-        // log.info("Student created: {} ({})", name, getStudentType()); ← 削除
     }
     
     /**
@@ -46,7 +45,6 @@ public abstract class Student extends Person
         
         grades.add(grade);
         recalculateGPA();
-        // log.info("Grade added for {}: {} ({}点)", name, grade.getSubject(), grade.getScore()); ← 削除
     }
     
     /**
@@ -62,7 +60,6 @@ public abstract class Student extends Person
                             .mapToDouble(Grade::getGpaPoint)
                             .sum();
         this.gpa = total / grades.size();
-        // log.debug("GPA recalculated for {}: {}", name, gpa); ← 削除
     }
     
     /**
@@ -105,5 +102,41 @@ public abstract class Student extends Person
     public String generateSummary() {
         return String.format("%s（%s）- GPA: %.2f, 成績レベル: %s", 
                            name, getStudentType(), gpa, getGradeLevel());
+    }
+
+    // ============================================
+    // ★ ここから追加メソッド（Week6 Lesson4）
+    // ============================================
+
+    /**
+     * 学生の詳細情報を文字列で返すメソッド
+     * Week 6レッスン4で追加：変更管理の実践用
+     */
+    public String getDetailedInfo() {
+        StringBuilder info = new StringBuilder();
+        info.append("=== 学生詳細情報 ===\n");
+        info.append("学生ID: ").append(getId()).append("\n");
+        info.append("氏名: ").append(getName()).append("\n");
+        info.append("年齢: ").append(getAge()).append("歳\n");
+        info.append("メールアドレス: ").append(getEmail()).append("\n");
+        info.append("専攻: ").append(getMajor()).append("\n");
+        info.append("====================");
+        return info.toString();
+    }
+
+    /**
+     * 学生の年齢区分を判定するメソッド
+     * Week 6レッスン4で追加：Git変更追跡の体験用
+     */
+    public String getAgeCategory() {
+        if (getAge() < 20) {
+            return "10代";
+        } else if (getAge() < 25) {
+            return "20代前半";
+        } else if (getAge() < 30) {
+            return "20代後半";
+        } else {
+            return "30代以上";
+        }
     }
 }
