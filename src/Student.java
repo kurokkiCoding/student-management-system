@@ -139,4 +139,30 @@ public abstract class Student extends Person
             return "30代以上";
         }
     }
+
+    // ============================================
+    // ★ Week 6 レッスン4 実践演習追加メソッド
+    // ============================================
+
+    /**
+     * 検索用の統合情報を取得
+     */
+    public String getSearchableInfo() {
+        return String.format("%s %s %s %d", 
+                            getName(), getId(), getMajor(), getAge());
+    }
+
+    /**
+     * 指定されたキーワードが学生情報に含まれるかチェック
+     */
+    public boolean containsKeyword(String keyword) {
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return false;
+        }
+        
+        String lowerKeyword = keyword.toLowerCase();
+        String searchableInfo = getSearchableInfo().toLowerCase();
+        
+        return searchableInfo.contains(lowerKeyword);
+    }
 }
