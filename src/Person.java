@@ -22,7 +22,6 @@ public abstract class Person {
         this.name = name;
         this.birthDate = birthDate;
         this.email = email;
-        // log.info("Person created: {}", name); ← 削除
     }
     
     /**
@@ -41,12 +40,34 @@ public abstract class Person {
      * 詳細情報表示（テンプレートメソッドパターン）
      */
     public final void showDetails() {
-        // log.info("Showing details for: {}", name); ← 削除
         System.out.println("=== 詳細情報 ===");
         System.out.println("ID: " + id);
         System.out.println("名前: " + name);
         System.out.println("年齢: " + getAge() + "歳");
         System.out.println("Email: " + email);
         System.out.println(introduce());
+    }
+
+    // ============================================
+    // ★ Week 6 レッスン4 追加メソッド
+    // ============================================
+
+    /**
+     * 人物の基本情報を短縮形式で表示
+     * Week 6レッスン4で追加：複合変更管理の実践用
+     */
+    public String getShortInfo() {
+        return String.format("%s(%d歳)", getName(), getAge());
+    }
+
+    /**
+     * メールドメインを取得
+     * Week 6レッスン4で追加：複合変更管理の実践用
+     */
+    public String getEmailDomain() {
+        if (getEmail() != null && getEmail().contains("@")) {
+            return getEmail().substring(getEmail().indexOf("@") + 1);
+        }
+        return "不明";
     }
 }
