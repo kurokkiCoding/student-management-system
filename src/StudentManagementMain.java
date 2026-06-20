@@ -1,32 +1,55 @@
-// ============================================
-// 9. メインクラス（統合テスト）
-// ============================================
-
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
-/**
- * OOP応用版学生管理システムのメインクラス
- * Week 5全技術の統合デモンストレーション
- */
 public class StudentManagementMain {
-    
+
+    // メニューで扱う学生リスト（簡易版）
+    private static List<Student> students = new ArrayList<>();
+
     public static void main(String[] args) {
-        // log.info("Starting OOP Advanced Student Management System"); ← 削除
-        
-        try {
-            // システム初期化
-            AdvancedStudentManagementSystem system = new AdvancedStudentManagementSystem();
-            
-            System.out.println("=== OOP応用版学生管理システム起動 ===");
-            System.out.println("Week 5技術統合デモンストレーション");
-            System.out.println();
-            
-            // ========================================
-            // 学生データ作成（Builder パターン活用）
-            // ========================================
-            
-            // 学部生の作成
-            UndergraduateStudent tanaka = UndergraduateStudent.builder()
+
+        // 初期データ投入（必要なら）
+        initializeSampleData();
+
+        Scanner scanner = new Scanner(System.in);
+
+        while (true) {
+            showMenu();
+            String choice = scanner.next();
+
+            switch (choice) {
+                case "1":
+                    showStudentList();
+                    break;
+                case "2":
+                    addStudentInteractive(scanner);
+                    break;
+                case "3":
+                    deleteStudentInteractive(scanner);
+                    break;
+                case "4":
+                    searchByGpaInteractive(scanner);
+                    break;
+                case "5":
+                    exportToCsv(students);
+                    break;
+                case "6":
+                    System.out.println("システムを終了します。");
+                    return;
+                default:
+                    System.out.println("無効な入力です。1〜6を選択してください。");
+            }
+        }
+    }
+
+    // ============================================
+    // 初期データ
+    // ============================================
+    private static void initializeSampleData() {
+        students.add(
+            UndergraduateStudent.builder()
                 .id("U001")
                 .name("田中太郎")
                 .birthDate(LocalDate.of(2003, 4, 15))
@@ -35,21 +58,11 @@ public class StudentManagementMain {
                 .enrollmentYear(2022)
                 .currentYear(2)
                 .club("プログラミング研究会")
-                .build();
-            
-            UndergraduateStudent sato = UndergraduateStudent.builder()
-                .id("U002")
-                .name("佐藤花子")
-                .birthDate(LocalDate.of(2002, 7, 22))
-                .email("sato@university.ac.jp")
-                .major("数学")
-                .enrollmentYear(2021)
-                .currentYear(3)
-                .club("数学研究会")
-                .build();
-            
-            // 大学院生の作成
-            GraduateStudent yamada = GraduateStudent.builder()
+                .build()
+        );
+
+        students.add(
+            GraduateStudent.builder()
                 .id("G001")
                 .name("山田次郎")
                 .birthDate(LocalDate.of(1999, 12, 3))
@@ -60,149 +73,150 @@ public class StudentManagementMain {
                 .advisor("AI教授")
                 .researchArea("機械学習")
                 .isTA(true)
-                .build();
-            
-            GraduateStudent suzuki = GraduateStudent.builder()
-                .id("G002")
-                .name("鈴木三郎")
-                .birthDate(LocalDate.of(1997, 3, 18))
-                .email("suzuki@graduate.university.ac.jp")
-                .major("量子情報学")
-                .enrollmentYear(2021)
-                .degree("博士")
-                .advisor("量子教授")
-                .researchArea("量子コンピューティング")
-                .isTA(false)
-                .build();
-            
-            // ========================================
-            // 学生登録（例外処理を含む）
-            // ========================================
-            
-            System.out.println("--- 学生登録処理 ---");
-            system.addStudent(tanaka);
-            system.addStudent(sato);
-            system.addStudent(yamada);
-            system.addStudent(suzuki);
-            
-            // ========================================
-            // 成績データ追加
-            // ========================================
-            
-            System.out.println("\n--- 成績データ追加 ---");
-            
-            // 田中の成績
-            system.addGrade("U001", Grade.builder()
-                .subject("プログラミング基礎")
-                .score(85)
-                .semester("2023春")
-                .testDate(LocalDate.of(2023, 7, 15))
-                .credits(3)
-                .build());
-            
-            system.addGrade("U001", Grade.builder()
-                .subject("データ構造")
-                .score(92)
-                .semester("2023秋")
-                .testDate(LocalDate.of(2023, 12, 20))
-                .credits(3)
-                .build());
-            
-            // 佐藤の成績
-            system.addGrade("U002", Grade.builder()
-                .subject("微積分学")
-                .score(95)
-                .semester("2023春")
-                .testDate(LocalDate.of(2023, 7, 18))
-                .credits(4)
-                .build());
-            
-            system.addGrade("U002", Grade.builder()
-                .subject("線形代数")
-                .score(88)
-                .semester("2023秋")
-                .testDate(LocalDate.of(2023, 12, 22))
-                .credits(4)
-                .build());
-            
-            // 山田の成績
-            system.addGrade("G001", Grade.builder()
-                .subject("機械学習理論")
-                .score(93)
-                .semester("2023春")
-                .testDate(LocalDate.of(2023, 7, 25))
-                .credits(2)
-                .build());
-            
-            system.addGrade("G001", Grade.builder()
-                .subject("深層学習")
-                .score(96)
-                .semester("2023秋")
-                .testDate(LocalDate.of(2023, 12, 18))
-                .credits(2)
-                .build());
-            
-            // 鈴木の成績
-            system.addGrade("G002", Grade.builder()
-                .subject("量子力学")
-                .score(91)
-                .semester("2023春")
-                .testDate(LocalDate.of(2023, 7, 28))
-                .credits(3)
-                .build());
-            
-            // ========================================
-            // ポリモーフィズムを活用した処理
-            // ========================================
-            
-            System.out.println("\n--- 個別自己紹介（ポリモーフィズム） ---");
-            tanaka.showDetails();
-            System.out.println();
-            yamada.showDetails();
-            System.out.println();
-            
-            // ========================================
-            // システム機能のテスト
-            // ========================================
-            
-            system.generateAllReports();
-            system.generateStatisticsByType();
-            system.simulateScholarships();
-            System.out.println();
-            system.showSystemStatus();
-            
-            // ========================================
-            // 例外処理のテスト
-            // ========================================
-            
-            System.out.println("\n--- 例外処理テスト ---");
-            
-            try {
-                system.findStudent("X999");
-            } catch (StudentNotFoundException e) {
-                System.out.println("期待された例外: " + e.getMessage());
-                // log.warn(...) 削除
-            }
-            
-            try {
-                system.addGrade("U001", Grade.builder()
-                    .subject("テスト科目")
-                    .score(150) // 不正な点数
-                    .semester("2024春")
-                    .testDate(LocalDate.now())
-                    .credits(3)
-                    .build());
-            } catch (InvalidGradeException e) {
-                System.out.println("期待された例外: " + e.getMessage());
-                // log.warn(...) 削除
-            }
-            
-            System.out.println("\n=== システム正常終了 ===");
-            // log.info(...) 削除
-            
-        } catch (Exception e) {
-            System.err.println("システムエラー: " + e.getMessage());
-            // log.error(...) 削除
+                .build()
+        );
+    }
+
+    // ============================================
+    // 1. 学生一覧表示
+    // ============================================
+    private static void showStudentList() {
+        System.out.println("=== 学生一覧 ===");
+
+        if (students.isEmpty()) {
+            System.out.println("学生が登録されていません。");
+            return;
         }
+
+        for (int i = 0; i < students.size(); i++) {
+            Student s = students.get(i);
+            System.out.printf("%d. %s (%s専攻, %d歳)\n",
+                    i + 1, s.getName(), s.getMajor(), s.getAge());
+        }
+    }
+
+    // ============================================
+    // 2. 学生追加（簡易版）
+    // ============================================
+    private static void addStudentInteractive(Scanner scanner) {
+        System.out.println("=== 学生追加 ===");
+        System.out.print("名前: ");
+        String name = scanner.next();
+
+        System.out.print("専攻: ");
+        String major = scanner.next();
+
+        // 最小限の情報で学部生として追加
+        students.add(
+            UndergraduateStudent.builder()
+                .id("U" + (students.size() + 1))
+                .name(name)
+                .birthDate(LocalDate.of(2000, 1, 1))
+                .email(name + "@example.com")
+                .major(major)
+                .enrollmentYear(2024)
+                .currentYear(1)
+                .club("未所属")
+                .build()
+        );
+
+        System.out.println("学生を追加しました！");
+    }
+
+    // ============================================
+    // 3. 学生削除
+    // ============================================
+    private static void deleteStudentInteractive(Scanner scanner) {
+        System.out.println("=== 学生削除 ===");
+        System.out.print("削除する学生名: ");
+        String name = scanner.next();
+
+        Student target = students.stream()
+                .filter(s -> s.getName().equals(name))
+                .findFirst()
+                .orElse(null);
+
+        if (target == null) {
+            System.out.println("該当する学生が見つかりません。");
+            return;
+        }
+
+        if (confirmDeletion(name)) {
+            students.remove(target);
+            System.out.println(name + " を削除しました。");
+        } else {
+            System.out.println("削除をキャンセルしました。");
+        }
+    }
+
+    // ============================================
+    // 削除確認
+    // ============================================
+    private static boolean confirmDeletion(String studentName) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("本当に \"" + studentName + "\" を削除しますか？ (y/n): ");
+        String input = scanner.next().toLowerCase();
+
+        return input.equals("y") || input.equals("yes")
+                || input.equals("はい") || input.equals("削除");
+    }
+
+    // ============================================
+    // 4. GPA検索（簡易版）
+    // ============================================
+    private static void searchByGpaInteractive(Scanner scanner) {
+        System.out.print("GPAの下限値を入力してください: ");
+        double min = scanner.nextDouble();
+
+        System.out.println("=== GPA検索結果 ===");
+        students.stream()
+                .filter(s -> s.getGpa() >= min)
+                .forEach(s -> System.out.println(s.getName() + " (GPA: " + s.getGpa() + ")"));
+    }
+
+    // ============================================
+    // 5. CSV出力
+    // ============================================
+    private static void exportToCsv(List<Student> students) {
+        System.out.println("=== CSV出力機能 ===");
+
+        if (students.isEmpty()) {
+            System.out.println("出力する学生データがありません。");
+            return;
+        }
+
+        try {
+            java.io.FileWriter writer = new java.io.FileWriter("students.csv");
+
+            writer.write("名前,年齢,GPA,専攻\n");
+
+            for (Student student : students) {
+                writer.write(String.format("%s,%d,%.2f,%s\n",
+                        student.getName(),
+                        student.getAge(),
+                        student.getGpa(),
+                        student.getMajor()));
+            }
+
+            writer.close();
+            System.out.println("students.csv に出力完了しました！");
+
+        } catch (java.io.IOException e) {
+            System.out.println("CSV出力でエラーが発生しました: " + e.getMessage());
+        }
+    }
+
+    // ============================================
+    // メインメニュー
+    // ============================================
+    private static void showMenu() {
+        System.out.println("\n=== 学生管理システム ===");
+        System.out.println("1. 学生一覧表示");
+        System.out.println("2. 学生追加");
+        System.out.println("3. 学生削除");
+        System.out.println("4. GPA検索");
+        System.out.println("5. CSV出力");
+        System.out.println("6. 終了");
+        System.out.print("選択してください (1-6): ");
     }
 }

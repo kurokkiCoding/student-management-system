@@ -15,12 +15,13 @@ import lombok.Data;
 @Builder
 @AllArgsConstructor
 public class Grade {
-    private String subject;    // 科目名
-    private int score;         // 点数
-    private String semester;   // 学期
+
+    private String subject;     // 科目名
+    private int score;          // 点数
+    private String semester;    // 学期
     private LocalDate testDate; // 試験日
-    private int credits;       // 単位数
-    
+    private int credits;        // 単位数
+
     /**
      * スコアをGPAポイントに変換
      */
@@ -31,7 +32,7 @@ public class Grade {
         if (score >= 60) return 1.0;
         return 0.0;
     }
-    
+
     /**
      * 評価文字を取得
      */
@@ -42,7 +43,7 @@ public class Grade {
         if (score >= 60) return "D";
         return "F";
     }
-    
+
     /**
      * 合格判定
      */
